@@ -1,0 +1,115 @@
+sudo apt-get update
+sudo nano /etc/apt/sources.list
+sudo apt-get update
+uname -r
+sudo apt-get install build-essential
+sudo apt-get install dwarfdump
+sudo apt-get install linux-headers-$(uname -r)
+sudo apt-get install git
+sudo apt-get install zip
+gcc --version
+cd ¬
+pwd
+sudo git clone https://github.com/504ensicsLabs/LiME.git
+ls -l
+cd LiME/src
+sudo make
+ls -l *.ko
+sudo insmod ./lime-3.13.0-170-generic.ko "path=/home/vagrant/ubuntudump.lime format=lime"
+cd ¬
+ls -l
+cd ¬
+sudo git clone https://github.com/volatilityfoundation/volatility.git
+cd volatility/tools/Linux
+sudo chown -R vagrant: /home/vagrant/volatility
+make
+ls -l
+sudo zip $(lsb_release -i -s)_$(uname -r)_profile.zip ./module.dwarf /boot/System.map-$(uname 
+-r)
+ls -l
+cp Ubuntu_3.13.0-170-generic_profile.zip /home/vagrant
+cd ¬
+ls -l
+md5sum ubuntudump.lime
+md5sum Ubuntu_3.13.0-170-generic_profile.zip
+sudo shutdown -h now
+sudo mount -t iso9660 /dev/sr0 /media/cdrom
+cd /media/cdrom
+ls -l
+sudo sh ./VBoxLinuxAdditions.run
+cd /media/testshare
+sudo nano /etc/group
+exit
+cd /home/vagrant
+cp Ubuntu_3.13.0-170-generic_profile.zip /media/testShare
+cp ubuntudump.lime /media/testShare
+ls -l /media/testShare
+ls -l /home/vagrant
+
+
+on kali -
+ cd /media/testshare/
+pwd
+ls -l
+md5sum both
+sudo apt install volatility
+volatility --info | grep Linux
+cp ubuntu.zip /home/kali/volatility/volatility/plugins/overlays/Linux
+cd /home/kali/volatility/plugins/overlays/Linux
+
+ls -l Ubuntu.zip
+chmod 77 Ubuntu.zip
+cd /media/testshare
+volatility --info | grep Linux
+volatility -f ubuntudump.lime --profile=LinuxUbuntu_3_13_0-170-generic_profilex64 linux_pslist
+
+
+
+
+
+
+Processes:
+
+make sure test_share folder has the zip, clean and infected
+volatility --info | grep Linux
+P=LinuxDebian_4_19_0-18-amd64_profilex64
+C=debiandump.lime
+I=labtest_mock_infected.lime
+mkdir -p ~/out
+
+
+cd /media/testshare
+volatility -f $C --profile=$P linux_pstree | tee ~/out/c_pstree.txt
+volatility -f $I --profile=$P linux_pstree | tee ~/out/i_pstree.txt
+volatility -f $C --profile=$P linux_psaux | tee ~/out/c_psaux.txt
+volatility -f $I --profile=$P linux_psaux | tee ~/out/i_psaux.txt
+
+grep -E "sudo|bash|\.sh" ~/out/i_psaux.txt
+volatility -f $I --profile=$P linux_psenv -p 596 | tee ~/out/i_psenv_596.txt
+volatility -f $I --profile=$P linux_lsof -p 596 | tee ~/out/i_lsof_596.txt
+
+
+cd ~/out
+cat i_psaux.txt
+grep -E "sudo|wget|sleep|mirror" c_pstree.txt c_psaux.txt
+grep -A15 "login" i_pstree.txt
+grep -E "sudo|mirror|wget|sleep" i_psaux.txt
+cat i_psenv_596.txt | tr ' ' '\n' | grep -E "SUDO|^USER=|LOGNAME|HOME|PWD"
+grep 255 i_lsof_596.txt
+grep -E "sudo|id|pwd|ls|mirror" i_bash.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
