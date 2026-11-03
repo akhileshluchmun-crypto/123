@@ -176,7 +176,8 @@ cat i_hosts.txt
 
 
 
-
+volatility -f $I --profile=$P linux_find_file -i 0xffff977619987828 -O out/mirror_sync.sh
+cat mirror_sync.sh
 
 
 
